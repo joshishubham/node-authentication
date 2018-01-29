@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Log in</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="./css/log.css">
+    <script src="/reload/reload.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Log in</h1>
+<hr>
+
+<div class="navbar">
+
+<a href="/">Home</a>
+<a href="/sign">SignUp</a>
+
+</div><br><hr>
+
+<div>
+
+        <% if (message.length > 0) { %>
+            <div class="alert alert-success"><%= message %></div>
+        <% } %>
+
+</div>
+
+<form autocomplete="off" action="/log" method="post">
+
+<label>Enter Email :</label><br>
+<input type="text" name="username" value="s@g.com" class="form-control" placeholder="Enter your email." /><br>
+
+<label>Enter Password :</label><br>
+<input type="show" name="Password" value="12345678" class="form-control" placeholder="Enter your password."/><br>
+
+<div class="form-group">
+<button type="submit" class="btn btn-primary">Log in</button><br><br>
+</div>
+
+</form>
+</div>
+
+</body>
+</html> 	
