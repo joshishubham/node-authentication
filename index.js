@@ -1,11 +1,11 @@
-//Modules
+//Node-modules
 var express       = require('express');
 var mongoose      = require('mongoose');
 var reload        = require('reload');
-//var flash         = require('connect-flash');
+var flash         = require('connect-flash');
 var cookieParser  = require('cookie-parser');
-//var session       = require('express-session');
-//var bp            = require('body-parser');
+var session       = require('express-session');
+var bp            = require('body-parser');
 var app           = express();
 
 //Database, Routes &  Passport Files
@@ -21,16 +21,16 @@ mongoose.connect("mongodb://localhost:27017/node-auth", {
 });
 
 //middleware 
-//app.use(flash());
-//app.use(bp.json());
-//app.use(bp.urlencoded({extended : true}));
+app.use(flash());
+app.use(bp.json());
+app.use(bp.urlencoded({extended : true}));
 app.use(cookieParser());
-/*app.use(session({
+app.use(session({
 	
-	  secret: "secure",
-	  resave: true,
-	  saveUninitialized: true,
-}));*/
+	    secret: "secure",
+	    resave: true,
+	    saveUninitialized: true,
+}));
 
 //ejs Templates
 app.set('view engine', './views');

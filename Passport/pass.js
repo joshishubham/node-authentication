@@ -1,8 +1,7 @@
-/*//Modulesfe
+//Node-modules
 var express       = require('express');
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-//var flash         = require('connect-flash');
 var app           = express();
 
 app.use(passport.initialize());
@@ -12,7 +11,7 @@ app.use(passport.session());
 var crud = require('../Database/data.js');
 
 //Passport
-passport.use(new LocalStrategy(function (Username, Password, done) {
+passport.use("local-login", new LocalStrategy(function (Username, Password, done) {
 	    
 	    crud.findOne({Username: Username},function (err, user) {
 	    	if (err) {
@@ -42,4 +41,4 @@ passport.deserializeUser(function (id, done) {
 	     });
 	});
 
-module.exports = app;*/
+module.exports = app;
