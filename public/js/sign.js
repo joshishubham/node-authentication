@@ -17,7 +17,7 @@
                     }
     			}
 			},
-		    username: {
+		    Username: {
 		    	    validators: {
 		    		    notEmpty: {
 		    			    message: "You can't leave this empty."

@@ -2,6 +2,8 @@
 var express       = require('express');
 var mongoose      = require('mongoose');
 var reload        = require('reload');
+var passport      = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var flash         = require('connect-flash');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
@@ -9,7 +11,7 @@ var bp            = require('body-parser');
 var app           = express();
 
 //Database, Routes &  Passport Files
-var mongodb       = require("./Database/data.js");
+var crud          = require("./Database/data.js");
 var pass          = require('./Passport/pass.js');
 var routes        = require('./Routes/route.js');
 
@@ -31,6 +33,8 @@ app.use(session({
 	    resave: true,
 	    saveUninitialized: true,
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 
 //ejs Templates
 app.set('view engine', './views');

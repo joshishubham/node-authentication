@@ -8,8 +8,7 @@ var Data = mongoose.Schema({
 	   Name     : {type : String, required: true}, 
 	   Username : {type : String, required: true, index: {unique: true}},  
 	   Email    : {type : String, required: true, index: {unique: true}}, 
-	   Password : {type : String, required: true},
-	   Confirm  : String
+	   Password : {type : String, required: true}
 });
 
 var crud = module.exports = mongoose.model("crud", Data);
@@ -26,9 +25,9 @@ module.exports.database = function (data, callback) {
   });
 };
 
-module.exports.validPassword = function(Password, callback) {
+/*module.exports.validPassword = function(Password, callback) {
 	bcrypt.compare(Password, hash, function(err, isMatch) {
              if (err) throw err;
                  callback(null, isMatch)
 	});
-};
+};*/

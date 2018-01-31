@@ -1,6 +1,17 @@
 //Node-modules
+<!--
+
+onerror = showError
+
+  function showError(x, y, z) {
+      
+      console.lo(x+" "+y+" "+z)    
+      
+  };
+
 var express       = require('express');
 var passport      = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 var app           = express();
 
 //Passport & Databases Files..
@@ -19,7 +30,7 @@ app.get('/sign', function (req, res) {
 });
 
 app.get('/log', function (req, res) {
-	  
+    //if (req.user) return res.require('/');
 	  res.render('log.ejs', {message: req.flash('msg')});
 });
 
@@ -39,13 +50,11 @@ app.post('/sign', function (req, res) {
 	  
    var data = new crud({
 
- 	     Name: req.body.Name,
+ 	     Name    : req.body.Name,
  	     Username: req.body.Username,
-       Email: req.body.Email,
+       Email   : req.body.Email,
        Password: req.body.Password,
-       Confirm: req.body.Confirm
-   
-   });
+ });
 
      crud.database(data, function (err, show) {
      	  
@@ -55,14 +64,64 @@ app.post('/sign', function (req, res) {
         req.flash('msg', 'You are successfully signup and now you can login');
 	      res.redirect('/log');
 
-        console.log("signup successfully");
+        console.log(data);
 });
 
 //Log-in post routes
-app.post('/log', passport.authenticate('local-login', {
+app.post('/log', passport.authenticate('log', {
+
         successRedirect: '/profile',
         failureRedirect: '/log',
         failureFlash: true
+
+}), function (req, res) {
+              
+      res.redirect('/profile');
+      console.log("body parsing", req.body)
+});
+
+passport.serializeUser(function (user, done) {
+         
+        return done(null, user.id)
+  });
+
+passport.deserializeUser(function (id, done) {
+         
+        crud.findbyID(id, function (err, user) {
+
+          done(err, user)
+       });
+  });
+
+passport.use("log", new LocalStrategy({
+      
+        usernameField: 'Email',
+        passportasswordField: 'Password',
+        passReqToCallback : true
+
+},function (Email, Password, done, req) {
+      
+      crud.findOne({Email: Email},function (err, user) {
+        
+      if (err) {
+          console.log("succeess");
+          return done(err)
+      }
+      
+      if (!user) {
+            console.log("your " + Email)
+            return done(null, false, req.flash("msg", "Invalid username."))
+      }
+      
+      if (!user.validPassword(Password)) {
+            console.log("okkk 3")
+            return done(null, false, req.flash("msg", "Incorrect Password}."))
+      }
+
+               return done(null, user)
+    });
+
 }));
 
 module.exports = app;
+-->

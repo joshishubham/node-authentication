@@ -1,5 +1,6 @@
 //Node-modules
-var express       = require('express');
+
+/*var express       = require('express');
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var app           = express();
@@ -18,9 +19,11 @@ passport.use("local-login", new LocalStrategy(function (Username, Password, done
 	    		return done(err)
 	   	}
 	   	if (!user) {
-	   		    return done(null, false, req.flash("msg", "Incorrect username."))
+	   		    console.log("your " + Username)
+	   		    return done(null, false, req.flash("msg", "Invalid username."))
 	   	}
-	   	if (!user.ValidPassword) {
+	   	if (!user.validPassword) {
+	   		    console.log("okkk 3")
 	   		    return done(null, false, req.flash("msg", "Incorrect Password}."))
 	   	}
 
@@ -41,4 +44,4 @@ passport.deserializeUser(function (id, done) {
 	     });
 	});
 
-module.exports = app;
+module.exports = app;*/
