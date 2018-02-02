@@ -1,47 +1,48 @@
-//Node-modules
-
-/*var express       = require('express');
-var passport      = require('passport');
+// // // //Node-modules
+var passport 	    = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var app           = express();
 
-app.use(passport.initialize());
-app.use(passport.session());
+var crud   = require('../Database/data.js');
 
-//Database Files
-var crud = require('../Database/data.js');
+passport.serializeUser(function(user, done){
+   
+   done(null, user.id); 
+});
 
-//Passport
-passport.use("local-login", new LocalStrategy(function (Username, Password, done) {
-	    
-	    crud.findOne({Username: Username},function (err, user) {
-	    	if (err) {
-	    		return done(err)
-	   	}
-	   	if (!user) {
-	   		    console.log("your " + Username)
-	   		    return done(null, false, req.flash("msg", "Invalid username."))
-	   	}
-	   	if (!user.validPassword) {
-	   		    console.log("okkk 3")
-	   		    return done(null, false, req.flash("msg", "Incorrect Password}."))
-	   	}
+passport.deserializeUser(function(id, done){
+   
+   crud.findById(id, function(err, user){
+       done(err, user);
+   });
+});
 
-	   	         return done(null, user)
-	 });
+
+passport.use('local',  new LocalStrategy ({
+     
+     usernameField: "Email",
+     passwordField: "Password"
+
+}, function (Email, Password, done, req) {
+       
+       crud.findOne({Email : Email}, function (err, user) {
+             
+             if (err) {
+
+                return done(err);
+             }
+
+             if (!user) {
+       
+                return done(null, false, console.log("Incorrect Email"));
+                //return done(null, false, req.flash("msg", "Incorrect Email"));
+             }
+
+             // if (!user.verifyPassword(Password)) {
+       
+             //    return done(null, false, console.log("Incorrect Password"));
+             //    //return done(null, false, req.flash("msg", "Incorrect Email"));
+             // }
+
+                return done(null, user)
+       });
 }));
-
-passport.serializeUser(function (user, done) {
-	       
-	      return done(null, user.id)
-	});
-
-passport.deserializeUser(function (id, done) {
-	       
-	      crud.findbyID(id, function (err, user) {
-
-	      	done(err, user)
-	     });
-	});
-
-module.exports = app;*/

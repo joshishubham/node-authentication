@@ -3,7 +3,6 @@ var express       = require('express');
 var mongoose      = require('mongoose');
 var reload        = require('reload');
 var passport      = require('passport');
-var LocalStrategy = require('passport-local').Strategy;
 var flash         = require('connect-flash');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
@@ -12,13 +11,12 @@ var app           = express();
 
 //Database, Routes &  Passport Files
 var crud          = require("./Database/data.js");
-var pass          = require('./Passport/pass.js');
 var routes        = require('./Routes/route.js');
 
 //mongoose connections
 mongoose.Promise = global.Promise;
 
-mongoose.connect("mongodb://localhost:27017/node-auth", {
+mongoose.connect("mongodb://localhost:27017/Data", {
 	   useMongoClient: true
 });
 
@@ -33,6 +31,7 @@ app.use(session({
 	    resave: true,
 	    saveUninitialized: true,
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
