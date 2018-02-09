@@ -22,14 +22,14 @@
 		    		    notEmpty: {
 		    			    message: "You can't leave this empty."
 		    		},
+                     regexp: {
+                        regexp: /^[a-zA-Z0-@-.-9_]+$/,
+                        message: 'The username can only consist of alphabetical, number and underscore'
+                    },
                      stringLength: {
                         min: 6,
                         max: 30, 
                         message: 'The username must be more than 6 and less than 30 characters long'
-                    },
-                    regexp: {
-                        regexp: /^[a-zA-Z0-@-.-9_]+$/,
-                        message: 'The username can only consist of alphabetical, number and underscore'
                     }
 		    	}
 		    },

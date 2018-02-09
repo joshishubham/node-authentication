@@ -2,7 +2,7 @@
 var express       = require('express');
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var flash         = require('connect-flash');
+var bcrypt = require('bcryptjs');
 var app           = express();
 
 //Database & Passport Files
@@ -22,7 +22,11 @@ app.get("/sign", function (req, res) {
 
 app.get("/login", function (req, res) {
    
-    res.render('login.ejs', {message : req.flash("msg")})
+    res.render('login.ejs', {
+
+        message : req.flash("suc"), 
+        error   : req.flash('err') 
+    });
 });
 
 app.get("/profile", function (req, res) {
@@ -38,40 +42,40 @@ app.get('/logout', function (req, res) {
 });
 
 //Sign-up Post routes.
-app.post('/sign', function (req, res) {
-        
-   var data = new crud({
+// app.post('/sign', function (req, res, next) {
+       
+//        console.log("Hello");
+//        next()
 
-      Name     : req.body.Name,
-      Username : req.body.Username,
-      Email    : req.body.Email,
-      Password : req.body.Password
-  });
+// }, passport.authenticate('sign', {
+         
+//          successRedirect: '/profile',
+//          failureRedirect: '/login',
+//          failureFlash: true 
+   
+//    }),function (req, res, next){
+          
+//           console.log('Hello 1');
+//           res.redirect("/login");
+//           next()
+//   }
+// );
 
-  crud.database(data, function (err, show) {
-        
-         if (err) throw err;
-  });
+app.post('/sign', function (req, res){
+         
+         var data = new crud(req.body)
 
-        req.flash('msg', "You are successfully signup and now you can login");
-        res.redirect('/login');
-        console.log(data);
-});
+            data.save()
+
+            console.log(data);
+
+            req.flash('suc', "Successfully");
+            
+            res.redirect('/login')
+   });
 
 //Log in post routes.
-passport.serializeUser(function(user, done){
-   
-   done(null, user.id); 
-});
-
-passport.deserializeUser(function(id, done){
-   
-   crud.findById(id, function(err, user){
-       done(err, user);
-   });
-});
-
-app.post('/login', passport.authenticate('local', {
+app.post('/login', passport.authenticate('login', {
          
          successRedirect: '/profile',
          failureRedirect: '/login',

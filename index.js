@@ -2,15 +2,17 @@
 var express       = require('express');
 var mongoose      = require('mongoose');
 var reload        = require('reload');
+var favicon 	  = require('serve-favicon')
 var passport      = require('passport');
 var flash         = require('connect-flash');
+var morgan        = require('morgan');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
 var bp            = require('body-parser');
 var app           = express();
 
-//Database, Routes &  Passport Files
-var crud          = require("./Database/data.js");
+//Database & Routes Files
+var crud          = require('./Database/data.js');
 var routes        = require('./Routes/route.js');
 
 //mongoose connections
@@ -21,19 +23,19 @@ mongoose.connect("mongodb://localhost:27017/Data", {
 });
 
 //middleware 
+app.use(morgan("dev"))
 app.use(flash());
 app.use(bp.json());
 app.use(bp.urlencoded({extended : true}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(cookieParser());
 app.use(session({
 	
 	    secret: "secure",
 	    resave: true,
-	    saveUninitialized: true,
+	    saveUninitialized: true
 }));
-
-app.use(passport.initialize());
-app.use(passport.session());
 
 //ejs Templates
 app.set('view engine', './views');
