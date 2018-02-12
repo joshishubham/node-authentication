@@ -39,9 +39,11 @@ app.get("/login", function (req, res) {
     });
 });
 
-app.get("/profile", function (req, res) {
+app.get("/profile", isLoggedIn, function (req, res) {
    
-    res.render('profile.ejs')
+    res.render('profile.ejs');
+      req : req.user;
+
 });
 
 app.get('/logout', function (req, res) {
@@ -68,5 +70,15 @@ app.post('/login', passport.authenticate('login', {
          failureFlash: true 
    })
 );
+
+function isLoggedIn(req, res, next) {
+ 
+    if (req.isAuthenticated())
+
+      return next();
+
+    res.redirect('/');
+
+}
 
 module.exports = app;

@@ -20,11 +20,16 @@ passport.use('signup', new LocalStrategy ({
 
             return done(err);
          }
+         
+         if (user == "") {
 
-         if (user) {
-
-            return done(null, false, req.flash("err", "Email is already used"));
+            return done(null, false, console.log("err", "Email is already used"));
          }
+
+         // if (user) {
+
+         //    return done(null, false, req.flash("err", "Email is already used"));
+         // }
 
           else{
 
