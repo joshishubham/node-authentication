@@ -1,87 +1,85 @@
-//Node-modules
+// //Node-modules
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
 var crud   = require('../Database/data.js');
 
-passport.serializeUser(function(user, done) {
-        
-     done(null, user.id);
-});
-
-passport.deserializeUser(function(id, done) {
-    
-     crud.findById(id, function(err, user) {
-        done(err, user);
-   });
-});
 
 //Passport Sign-Up authentication..
-// passport.use('sign',  new LocalStrategy ({
-     
-//      usernameField: "Email",
-//      passwordField: "Password"
+passport.use('signup', new LocalStrategy ({
 
-// }, function (Name, Username, Email, Password, Confirm, done, req) {
-       
-//        crud.findOne({Email : Email}, function (err, user) {
-             
-//              if (err) {
+       usernameField : "Email",
+       passwordField : "Password",
+       passReqToCallback: true
+}, 
+   function (req, Email, Password, done) {
+      
+      crud.findOne({Email:Email},function (err, user) {
+        
+         if (err) {
 
-//                 return done(err);
-//              }
+            return done(err);
+         }
 
-//              if (user) {
-       
-//                 return done(null, false, console.log("Email is already used!"));
-//                 //return done(null, false, req.flash("msg", "Incorrect Email"));
-//              }
+         if (user) {
 
-//              else{
+            return done(null, false, req.flash("err", "Email is already used"));
+         }
 
-//                    var data = new crud()
+          else{
 
-//                       //data.Name     = Name;
-//                       //data.Username = Username;
-//                       data.Email    = Email;
-//                       data.Password = Password;
-//                       //data.Confirm  = Confirm;
+               var data = new crud();
+                 
+                 data.Password = data.generateHash(Password);
+                 data.Email    = Email;
+                 data.Username = req.body.Username;
+                 data.Name     = req.body.Name;
+                 data.Confirm  = req.body.Confirm;
 
-//                         data.save(function (err) {
-                              
-//                           if (err) 
+                   data.save(function (err) {
+                      
+                      if (err) 
 
-//                             throw err;
-
-//                            return done(null, user)
-//                     });
-//              }
-             
-//         });
-//     })
-// );
+                        throw err;
+                           
+                           console.log(data);
+                      return done(null, data, req.flash("suc", "You have successfully sign up and can you now login"));
+              })
+            }
+        });
+     })
+   )
 
 //Passport Log-In authentication..
-passport.use('login',  new LocalStrategy ({
-     
-     usernameField: "Email",
-     passwordField: "Password"
-
-}, function (Email, Password, done, req) {
+passport.use('login', new LocalStrategy ({
        
-       crud.findOne({Email : Email}, function (err, user) {
-             
-             if (err) {
+       usernameField : "Email",
+       passwordField : "Password",
+       passReqToCallback: true 
+},
+   function(req, Email, Password,done){
 
-                return done(err);
-             }
+      crud.findOne({Email:Email}, function (err, user) {
 
-             if (!user) {
-       
-                return done(null, false, console.log("Incorrect Email"));
-                //return done(null, false, req.flash('err', 'Incorrect Email'));
-             }
+           if (err) {
 
-                return done(null, user)
-       });
-}));
+              return done(err)
+
+           }
+
+           if (!user) {
+
+              //return done(null, false, console.log("Invalid Email"));
+              return done(null, false, req.flash("err", "Invalid Email"));
+           }
+
+           if (!user.validPassword(Password)) {
+
+                //return done(null, false, console.log("Invalid Password"));
+                return done(null, false, req.flash("err", "Invalid Password"))
+           }
+
+             return done(null, user);
+      })
+   }
+));

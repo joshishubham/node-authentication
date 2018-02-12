@@ -2,22 +2,32 @@
 var express       = require('express');
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
-var bcrypt = require('bcryptjs');
 var app           = express();
 
 //Database & Passport Files
 var crud = require('../Database/data.js');
 var pass = require('../Passport/pass.js');
 
+passport.serializeUser(function(user, done) {
+        
+     done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    
+     crud.findById(id, function(err, user) {
+        done(err, user);
+   });
+});
+
 //Rotes
 app.get("/", function (req, res) {
    
-    res.render('main.ejs')
-});
+    res.render('sign.ejs',{
+        
+     error   : req.flash('err')
 
-app.get("/sign", function (req, res) {
-   
-    res.render('sign.ejs')
+   });
 });
 
 app.get("/login", function (req, res) {
@@ -42,37 +52,13 @@ app.get('/logout', function (req, res) {
 });
 
 //Sign-up Post routes.
-// app.post('/sign', function (req, res, next) {
-       
-//        console.log("Hello");
-//        next()
+app.post('/sign', passport.authenticate('signup', {
 
-// }, passport.authenticate('sign', {
-         
-//          successRedirect: '/profile',
-//          failureRedirect: '/login',
-//          failureFlash: true 
-   
-//    }),function (req, res, next){
-          
-//           console.log('Hello 1');
-//           res.redirect("/login");
-//           next()
-//   }
-// );
-
-app.post('/sign', function (req, res){
-         
-         var data = new crud(req.body)
-
-            data.save()
-
-            console.log(data);
-
-            req.flash('suc', "Successfully");
-            
-            res.redirect('/login')
-   });
+         successRedirect: '/login',
+         failureRedirect: '/',
+         failureFlash: true
+   })
+);
 
 //Log in post routes.
 app.post('/login', passport.authenticate('login', {

@@ -5,28 +5,22 @@ var bcrypt = require('bcryptjs');
 //Mongoose schema
 var Data = mongoose.Schema({
 
-	   Name     : {type : String, required: true}, 
-	   Username : {type : String, required: true, index: {unique: true}},  
-	   Email    : {type : String, required: true, index: {unique: true}}, 
+	   Name     : {type : String}, 
+	   Username : {type : String, index: {unique: true}},  
+	   Email    : {type : String, index: {unique: true}}, 
 	   Password : {type : String},
 	   Confirm  : {type : String}
 });
 
+Data.methods.generateHash = function(Password) {
+
+	 return bcrypt.hashSync(Password, bcrypt.genSaltSync(8), null);
+
+}
+
+Data.methods.validPassword = function(Password){
+     
+     return bcrypt.compareSync(Password, this.Password);
+}
+
 var crud = module.exports = mongoose.model("crud", Data);
-
-
-// //Bcrypt password
-// module.exports.database = function (data, callback) { 
-//   var salt =  bcrypt.genSalt(10, function(err, salt) { 
-//             if (err) throw err;
-//       var hash = bcrypt.hash(data.Password, salt, function(err, hash) {
-// 	           if (err) throw err;
-// 		         data.Password = hash;
-// 		           data.save(callback);
-//     });
-//   });
-// };
-
-// // module.exports.verifyPassword = function(Password) {
-// // 	return bcrypt.compare(Password, this.Data.Password);
-// // };

@@ -24,8 +24,15 @@
 <a href="/" >Home</a>
 <a href="/login" >Login</a>
 
-</div><br><hr>
+</div><br>
 
+<div>
+
+		<% if (error.length > 0) { %>
+	   		<div class="alert alert-danger"><%= error %></div>
+	 	<% } %>
+
+</div>
 
 <form autocomplete="off" action="/sign" method="post" id = "validtation" >
 

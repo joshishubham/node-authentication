@@ -5,7 +5,6 @@ var reload        = require('reload');
 var favicon 	  = require('serve-favicon')
 var passport      = require('passport');
 var flash         = require('connect-flash');
-var morgan        = require('morgan');
 var cookieParser  = require('cookie-parser');
 var session       = require('express-session');
 var bp            = require('body-parser');
@@ -23,12 +22,9 @@ mongoose.connect("mongodb://localhost:27017/Data", {
 });
 
 //middleware 
-app.use(morgan("dev"))
 app.use(flash());
 app.use(bp.json());
 app.use(bp.urlencoded({extended : true}));
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(cookieParser());
 app.use(session({
 	
@@ -36,6 +32,21 @@ app.use(session({
 	    resave: true,
 	    saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser(function(user, done) {
+        
+     done(null, user.id);
+});
+
+passport.deserializeUser(function(id, done) {
+    
+     crud.findById(id, function(err, user) {
+        done(err, user);
+   });
+});
+
 
 //ejs Templates
 app.set('view engine', './views');
