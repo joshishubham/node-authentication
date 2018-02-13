@@ -42,7 +42,7 @@ app.get("/login", function (req, res) {
 app.get("/profile", isLoggedIn, function (req, res) {
    
     res.render('profile.ejs');
-      req : req.user;
+     //req : req.user;
 
 });
 
@@ -73,12 +73,15 @@ app.post('/login', passport.authenticate('login', {
 
 function isLoggedIn(req, res, next) {
  
-    if (req.isAuthenticated())
+    if (req.isAuthenticated()){
 
       return next();
-
-    res.redirect('/');
-
 }
+ 
+ else{
+
+    res.redirect('/login');
+}
+ }
 
 module.exports = app;
