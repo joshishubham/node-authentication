@@ -12,12 +12,6 @@ var Data = mongoose.Schema({
 	   Confirm  : {type : String}
 });
 
-Data.methods.generateHash = function(Password) {
-
-	 return bcrypt.hashSync(Password, bcrypt.genSaltSync(8), null);
-
-}
-
 Data.methods.validPassword = function(Password){
      
      return bcrypt.compareSync(Password, this.Password);

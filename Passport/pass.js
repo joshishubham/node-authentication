@@ -1,6 +1,8 @@
 // //Node-modules
 var passport      = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcryptjs');
+
 
 var crud   = require('../Database/data.js');
 
@@ -20,40 +22,45 @@ passport.use('signup', new LocalStrategy ({
 
             return done(err);
          }
-         
-         if (user == "") {
 
-            return done(null, false, console.log("err", "Email is already used"));
+         if (user) {
+
+            return done(null, false, req.flash("err", "Email is already used"));
          }
-
+         
          // if (user) {
 
-         //    return done(null, false, req.flash("err", "Email is already used"));
+         //    return done(null, false, console.log("err", "Email is already used"));
          // }
 
           else{
 
-               var data = new crud();
-                 
-                 data.Password = data.generateHash(Password);
-                 data.Email    = Email;
-                 data.Username = req.body.Username;
-                 data.Name     = req.body.Name;
-                 data.Confirm  = req.body.Confirm;
+               bcrypt.genSalt(10, function(err, salt) {
+              bcrypt.hash(req.body.Password, salt, function(err, hash) {
+                
+                var data = new crud({
 
-                   data.save(function (err) {
+                    Email    : req.body.Email,
+                    Username : req.body.Username,
+                    Name     : req.body.Name,
+                    Password : hash,
+                    Confirm  : req.body.Confirm
+                })
+
+                data.save(function (err) {
                       
                       if (err) 
 
                         throw err;
-                           
-                           console.log(data);
+
                       return done(null, data, req.flash("suc", "You have successfully sign up and can you now login"));
-              })
-            }
+              });
+           });
         });
-     })
-   )
+       }
+    });
+  })
+)
 
 //Passport Log-In authentication..
 passport.use('login', new LocalStrategy ({
